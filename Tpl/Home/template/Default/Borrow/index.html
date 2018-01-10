@@ -1,0 +1,353 @@
+<include file="Index:header" />
+<!--头部 end -->
+<div class="sub-nav" sup="Project">
+    <div class="sub-nav-inner">
+        <div class="container">
+            <!--Navigation start-->
+            <div class="navbar navbar-inverse">
+                <div class="navbar-inner">
+                 <if condition="$b.id gt 0 ">
+                    <ul class="nav">
+                        <li <eq name="b.type" value="1">class="active"</eq>><a href="__ROOT__/Borrow/index/mortgage.html">应收账款融资</a></li>
+
+                        
+                    </ul>
+                 <else/>
+                 	<ul class="nav">
+                        <li <eq name="Think.get.mid" value="mortgage">class="active"</eq>><a href="__ROOT__/Borrow/index/mortgage.html">应收账款融资</a></li>
+
+                        
+                    </ul>
+                 </if>
+                </div>
+            </div>
+            <!--Navigation end-->
+        </div>
+    </div>
+</div>
+<div class=" row-fluid">
+<!-- container start --> 
+<div class="container paddtop">
+<if condition="$b.id gt 0 ">
+<form method="post"  action='__URL__/ordinaryEdit'  class="form-horizontal" >
+<input name="sid" type="hidden" value="{$Think.get.mid}" />
+<else/>
+<form method="post"  action='__URL__/ordinaryAdd'  class="form-horizontal" >
+</if>
+
+        <switch name="Think.get.mid">
+            <case value="mortgage"><input name="type" type="hidden" value="1" /></case>
+            <case value="pledge"><input name="type" type="hidden" value="2" /></case>
+            <default /><input name="type" type="hidden" value="{$b.type}" />
+        </switch>
+        
+    <table class="table table-striped table-bordered table-condensed">
+        <thead>
+          <tr>
+            <th colspan="3" >
+            	<div class="alert alert-error">
+            		<a class="close" data-dismiss="alert">×</a>
+                    发布借款信息之前，必须先进行<a href="__ROOT__/Center/approve/autonym.html">《企业实名认证》</a>
+                </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="width:100px;">
+                   标题:
+            </td>
+            <td>
+                   <input name="title" type="text" class="span5"  maxlength="25"  datatype="*" nullmsg="请输入标题！" value="{$b.title}">
+            </td>
+
+          </tr>
+        </tbody>
+
+        <tbody>
+          <tr>
+            <td>
+                   核心企业:
+            </td>
+            <td>
+                   <select name="use" class="span4">   
+                   <volist name="linkage.use" id="ue">
+                   			<if condition="$b.use eq $ue.value ">
+                            <option value='{$ue.value}' selected="selected">{$ue.name}</option>
+                            <else/>
+                            <option value='{$ue.value}' >{$ue.name}</option>
+                            </if>
+                    </volist>
+                    </select>
+            </td>
+
+          </tr>
+        </tbody>
+        <tbody>
+          <tr>
+            <td>
+                   统计单位:
+            </td>
+            <td>
+            	<label class="checkbox inline counter_check">
+                    <input name="candra" type="radio" value="0" {$b['candra']==0?checked:''} onclick="switchover(1);">
+                    按月
+                </label>
+                <label class="checkbox inline counter_check">
+                    <input name="candra" type="radio" value="1" {$b['candra']==1?checked:''} onclick="switchover(2);">
+                    按天
+                </label>
+            </td>
+
+          </tr>
+        </tbody>
+        <tbody>
+          <tr>
+            <td>
+                   借款期限:
+            </td>
+            <td>
+            	<label class=" inline">
+                <if condition="$b['candra'] eq 0 ">
+                   <select name="deadline" style="width:80px;" id="deadline">   
+                <else/>
+                <select style="width:80px;display: none;" id="deadline">
+                </if>
+                    <volist name="linkage.deadline_month" id="ue" >
+                            
+                            <if condition="$b.deadline eq $ue.value ">
+                            <option value='{$ue.value}' selected="selected">{$ue.name}</option>
+                            <else/>
+                            <option value='{$ue.value}' >{$ue.name}</option>
+                            </if>
+                    </volist>
+                    </select>
+                    <if condition="$b['candra'] eq 0 ">
+                     <select style="width:80px;display: none;" id="deadline1">   
+                    <else/>
+                     <select name="deadline" style="width:80px;" id="deadline1">   
+                    </if>
+                    
+                     <volist name="linkage.deadline_day" id="ue">
+                            <if condition="$b.deadline eq $ue.value ">
+                            <option value='{$ue.value}' selected="selected">{$ue.name}</option>
+                            <else/>
+                            <option value='{$ue.value}' >{$ue.name}</option>
+                            </if>
+                    </volist>
+                    </select>
+                </label>
+            </td>
+
+          </tr>
+        </tbody>
+        <tbody>
+          <tr>
+            <td>
+                   还款方式:
+            </td>
+            <td>
+                   <select name="way" class="span4">   
+                    <volist name="linkage.way" id="ue">
+                            <if condition="$b.way eq $ue.value ">
+                            <option value='{$ue.value}' selected="selected">{$ue.name}</option>
+                            <else/>
+                            <option value='{$ue.value}' >{$ue.name}</option>
+                            </if>
+                    </volist>
+                    </select>
+            </td>
+
+          </tr>
+        </tbody>
+
+        <tbody>
+          <tr>
+            <td>
+                   借款金额:
+            </td>
+            <td>
+            	<div  class="input-append">
+                <if condition="$Think.get.mid eq 'guarantee'">
+                   	<input name="money" type="text" class="span2" onkeyup="var money=$(this).val();$('#surplus').val(money);$('#assure').val(money);moneys(money);" maxlength="7"  datatype="n3-7" nullmsg="请输入借款金额！"><span class="add-on">元</span>
+                   	<input id="assure" name="assure" type="hidden" />
+                    <input id="surplus" name="surplus" type="hidden" />
+                <else/>
+                    <input name="money" value="<egt name="b.money" value="1">{$b.money|floor}</egt>" type="text" class="span8"  onkeyup="var money=$(this).val();$('#surplus').val(money);moneys(money);" maxlength="7"  datatype="n3-7" nullmsg="请输入借款金额！"><span class="add-on">元</span>
+                    <input id="surplus" name="surplus" type="hidden"  value="<egt name="b.money" value="1">{$b.money|floor}</egt>"/>
+                </if>
+                </div>
+            </td>
+
+          </tr>
+        </tbody>
+
+                <tbody>
+          <tr>
+            <td>
+                   购销合同:
+            </td>
+            <td>
+            <ul class="thumbnails" id="file_content">
+            <foreach name="b.data" item="vo" key="kid">
+                <li id="i{$kid}">
+                  <div class="top"><a class="icon icon-color icon-close" onclick="intExit({$kid},'{$vo}')"></a></div>
+                    <a id="feila{$kid}" >
+                    <img id="feil{$kid}" src="__PUBLIC__/uploadify/uploads/mark/{$vo}" style="width:150px;height:150px;">
+                    </a>
+                    <input name="img[]" type="hidden"  value="{$vo}"/>
+                </li>
+            </foreach>
+            </ul>
+             <input id="file_url" type="hidden" value="__PUBLIC__/uploadify/uploads/mark/"/>
+            <input id="folder" type="hidden" value="mark"/>
+            <input data-no-uniform="true" type="file" name="file_goods" id="file_goods" />      
+            </td>
+  
+          </tr>
+        </tbody>
+        <tbody>
+          <tr>
+            <td>
+                   送货单:
+            </td>
+            <td>
+            <ul class="thumbnails" id="file_content">
+            <foreach name="b.data" item="vo" key="kid">
+                <li id="i{$kid}">
+                  <div class="top"><a class="icon icon-color icon-close" onclick="intExit({$kid},'{$vo}')"></a></div>
+                    <a id="feila{$kid}" >
+                    <img id="feil{$kid}" src="__PUBLIC__/uploadify/uploads/mark/{$vo}" style="width:150px;height:150px;">
+                    </a>
+                    <input name="img[]" type="hidden"  value="{$vo}"/>
+                </li>
+            </foreach>
+            </ul>
+             <input id="file_url" type="hidden" value="__PUBLIC__/uploadify/uploads/mark/"/>
+            <input id="folder" type="hidden" value="mark"/>
+            <input data-no-uniform="true" type="file" name="file_goods" id="file_goods" />      
+            </td>
+  
+          </tr>
+        </tbody>
+                <tbody>
+          <tr>
+            <td>
+                   进货单:
+            </td>
+            <td>
+            <ul class="thumbnails" id="file_content">
+            <foreach name="b.data" item="vo" key="kid">
+                <li id="i{$kid}">
+                  <div class="top"><a class="icon icon-color icon-close" onclick="intExit({$kid},'{$vo}')"></a></div>
+                    <a id="feila{$kid}" >
+                    <img id="feil{$kid}" src="__PUBLIC__/uploadify/uploads/mark/{$vo}" style="width:150px;height:150px;">
+                    </a>
+                    <input name="img[]" type="hidden"  value="{$vo}"/>
+                </li>
+            </foreach>
+            </ul>
+             <input id="file_url" type="hidden" value="__PUBLIC__/uploadify/uploads/mark/"/>
+            <input id="folder" type="hidden" value="mark"/>
+            <input data-no-uniform="true" type="file" name="file_goods" id="file_goods" />      
+            </td>
+  
+          </tr>
+        </tbody>
+                <tbody>
+          <tr>
+            <td>
+                   对帐单:
+            </td>
+            <td>
+            <ul class="thumbnails" id="file_content">
+            <foreach name="b.data" item="vo" key="kid">
+                <li id="i{$kid}">
+                  <div class="top"><a class="icon icon-color icon-close" onclick="intExit({$kid},'{$vo}')"></a></div>
+                    <a id="feila{$kid}" >
+                    <img id="feil{$kid}" src="__PUBLIC__/uploadify/uploads/mark/{$vo}" style="width:150px;height:150px;">
+                    </a>
+                    <input name="img[]" type="hidden"  value="{$vo}"/>
+                </li>
+            </foreach>
+            </ul>
+             <input id="file_url" type="hidden" value="__PUBLIC__/uploadify/uploads/mark/"/>
+            <input id="folder" type="hidden" value="mark"/>
+            <input data-no-uniform="true" type="file" name="file_goods" id="file_goods" />      
+            </td>
+  
+          </tr>
+        </tbody>
+
+      </table>
+
+      	  <div>
+          <input type="text" class="span1" name="proving" placeholder="验证码" maxlength="4">
+          <img class="CaptchaImage" id="verifyImg" src='__APP__/Public/verify/' onClick="changeVerify()" title="点击刷新验证码" data-rel="tooltip" style="cursor:pointer;padding-left: 5px;position: relative;top: 5px;"/>
+          </div>
+            <div>
+            <button class="btn btn-primary" type="submit">
+              确认提交
+           </button>
+            </div>
+</form>
+</div>
+</div>
+<!-- container end -->
+<script src="__PUBLIC__/jquery/Validform_v5.3.2min.js"></script>
+<script>
+function choose_reward(type){
+	if (type==1){
+		$("#reward_1").attr("disabled","disabled");
+		$("#reward_2").attr("disabled","disabled");
+	}else if(type==2){
+		$("#reward_1").removeAttr("disabled");
+		$("#reward_2").attr("disabled","disabled");
+	}else{
+		$("#reward_2").removeAttr("disabled");
+		$("#reward_1").attr("disabled","disabled");
+	}
+}
+function changeVerify(){
+    var timenow = new Date().getTime();
+    document.getElementById('verifyImg').src='__APP__/Public/verify/'+timenow;
+}
+function switchover(id){
+	if(id==1){
+		$('#deadline1').hide();$('#deadline').show();$('#deadline').attr('name','deadline');$('#deadline1').attr('name','');
+	}else{
+		$('#deadline1').show();$('#deadline').hide();$('#deadline1').attr('name','deadline');$('#deadline').attr('name','');
+	}
+}
+ $(function(){
+	//$(".form-horizontal").Validform();  //就这一行代码！;
+
+	$(".form-horizontal").Validform({
+		datatype:{
+			"me" : /^[\u4E00-\u9FA5\uf900-\ufa2d\w]{2,16}$/,
+		}
+	});
+})
+function intExit(id,img)
+{
+	$('#i'+id).empty();
+}
+</script>
+<!--底部  start-->
+<include file="Index:footer" />
+<script src="__PUBLIC__/bootstrap/js/jquery-ui-1.8.21.custom.min.js"></script>
+
+<!-- 选择或下拉增强器 -->
+<script src="__PUBLIC__/bootstrap/js/jquery.chosen.min.js"></script>
+<!-- 整输入器复选框、广播和文件 -->
+<script src="__PUBLIC__/bootstrap/js/jquery.uniform.min.js"></script>
+<!-- editor -->
+<script src="__PUBLIC__/editor/kindeditor-min.js"></script>
+<!-- 通知插件-->
+<script src="__PUBLIC__/bootstrap/js/jquery.noty.js"></script>
+<!-- 自动增长textarea插件 -->
+<script src="__PUBLIC__/bootstrap/js/jquery.autogrow-textarea.js"></script>
+<!-- 多个文件上传插件-->
+<script src="__PUBLIC__/bootstrap/js/jquery.uploadify-3.1.min.js"></script>
+<!-- 为魅力演示应用程序脚本 -->
+<script src="__PUBLIC__/bootstrap/js/charismah.js"></script>

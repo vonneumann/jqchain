@@ -1,0 +1,71 @@
+<include file="Index:header" />
+<!--头部 end -->
+<!--左栏 starts -->
+<div class="container-fluid">
+		<div class="row-fluid">
+			<include file="left" />
+
+			<div id="content" class="span10">
+			<!-- content starts -->
+<!--左栏 end -->
+<ul class="breadcrumb">
+      <li>
+        <a href="__APP__/TIFAWEB_DSWJCMS.html">首页</a> <span class="divider">/</span>
+      </li>
+      <li class="active">认证列表</li>
+      <div  class="pull-right"> 
+    <a href="#screening" data-toggle="modal">筛选</a>
+    </div>
+</ul>
+<table class="table table-striped table-bordered table-condensed datatable ">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>用户名</th>
+                <th>公司名</th>
+                <th>联系人</th>
+                <th>联系电话</th>
+                <th>营业执照或注册号</th>
+              </tr>
+            </thead>
+            <tbody>
+
+<volist name="audit" id="vo">
+                <tr>
+                <td>
+                       {$vo.id}
+                </td>
+                <td>
+                       {$vo.username}
+                </td>
+                <td>
+                      {$vo.company}
+                </td>
+                <td>
+                      {$vo.name}
+                </td>
+                <td>
+                      {$vo.cellphone}
+                </td>
+
+                <td>
+                      {$vo.idcard} 
+                      <span>
+                        <foreach name="vo.idcard_img" item="v">
+                            <a href="__PUBLIC__/uploadify/uploads/idcard/{$v}" class="cboxElement">
+                            营业执照{$key+1}
+                            </a>
+                        </foreach>
+                      </span>
+                </td>
+
+              </tr>
+        <input name="id[]" type="hidden" value="{$vo.id}" />
+</volist>
+            </tbody>
+          </table>
+
+
+    </div>
+</div>
+<include file="Index:footer" />
